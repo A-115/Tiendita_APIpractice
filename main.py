@@ -4,9 +4,38 @@ from fastapi import FastAPI, HTTPException, status
 from pydantic import BaseModel
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+import asyncio
+from fastapi import FastAPI, HTTPException
 
+app = FastAPI(title="API Proyecto Tiendita")
 
-app = FastAPI()
+# Cerrojo para sincronización asíncrona
+#lock = asyncio.Lock()
+
+# Inventario simulado en memoria con producto crítico
+inventario = [
+    {"id": 1, "nombre": "Coca-Cola", "precio": 20.0, "cantidad": 25},
+    {"id": 2, "nombre": "Papas", "precio": 15.0, "cantidad": 40},
+    {"id": 3, "nombre": "Café", "precio": 18.0, "cantidad": 1},  # Crítico
+]
+
+@app.post("/productos/{producto_id}")
+async def comprar_producto(producto_id: int):
+    try:
+        # async with lock: # Punto de control del experimento
+        for objeto in inventario:
+            if objeto["id"] == producto_id:
+                if objeto["cantidad"] > 0:
+                    await asyncio.sleep(0.05)  # Latencia simulada
+                    objeto["cantidad"] -= 1
+                    return {"mensaje": "Producto comprado"}
+                else:
+                    raise HTTPException(400, "No hay stock")
+        raise HTTPException(400, "Producto no existe")
+    except HTTPException:
+        raise
+    except Exception as error:
+        raise HTTPException(500, f"Error interno: {str(error)}")
 
 
 app.add_middleware(

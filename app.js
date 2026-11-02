@@ -39,6 +39,11 @@ async function cargarProductos() {
                     </span>
                 </td>
                 <td class="text-end">
+                    <button class="btn btn-outline-primary btn-sm" onclick="comprarProducto(${p.id})">
+                        <i class="bi bi-trash"></i> Comprar
+                    </button>
+                </td>
+                <td class="text-end">
                     <button class="btn btn-outline-danger btn-sm" onclick="eliminarProducto(${p.id})">
                         <i class="bi bi-trash"></i> Eliminar
                     </button>
@@ -51,13 +56,13 @@ async function cargarProductos() {
         console.error("Error al cargar productos:", error);
     }
 }
-// 2. Función para Agregar Producto (POST)
+
 async function agregarProducto(event){
     event.preventDefault();
 
-    var nombre = document.getElementById("nombre").value ;
-    var precio = parseFloat(document.getElementById("precio").value);
-    var cantidad = parseInt(document.getElementById("cantidad").value);
+    var nombre = document.getElementById("nombre").value
+    var precio = document.getElementById("precio").value
+    var cantidad = document.getElementById("cantidad").value
 
     const nuevoContenido = {nombre, precio, cantidad}
     try {
@@ -73,7 +78,7 @@ async function agregarProducto(event){
         console.log(error)
     }
 }
-// 3. Función para Eliminar Producto (DELETE)
+
 async function eliminarProducto(id_producto){
     event.preventDefault();
 
@@ -90,8 +95,30 @@ async function eliminarProducto(id_producto){
     }
 }
 
+async function comprarProducto(id_producto){
+    event.preventDefault();
+
+    try {
+        const respuesta = await fetch("http://127.0.0.1:8000/productos/"+id_producto, {method: "POST", headers: {"Content-Type": "application/json"}});
+
+        if(respuesta){
+            await cargarProductos();
+        }else{
+            console.error("Hubo algo malo al eliminar")
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+
+
 // Cargar catálogo al abrir la página
 document.addEventListener("DOMContentLoaded", cargarProductos);
 
+
 // Agregamos el evento para que se abre la función al dar clic en guardar producto
+formProducto.addEventListener("submit", agregarProducto);
+
+
 formProducto.addEventListener("submit", agregarProducto);
