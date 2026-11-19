@@ -1,42 +1,13 @@
-import asyncio
+import os
+import pandas as pd
 from typing import List, Optional
+from datetime import datetime
 from fastapi import FastAPI, HTTPException, status
 from pydantic import BaseModel
-from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-import asyncio
-from fastapi import FastAPI, HTTPException
+from fastapi.responses import FileResponse
 
-app = FastAPI(title="API Proyecto Tiendita")
-
-# Cerrojo para sincronización asíncrona
-#lock = asyncio.Lock()
-
-# Inventario simulado en memoria con producto crítico
-inventario = [
-    {"id": 1, "nombre": "Coca-Cola", "precio": 20.0, "cantidad": 25},
-    {"id": 2, "nombre": "Papas", "precio": 15.0, "cantidad": 40},
-    {"id": 3, "nombre": "Café", "precio": 18.0, "cantidad": 1},  # Crítico
-]
-
-@app.post("/productos/{producto_id}")
-async def comprar_producto(producto_id: int):
-    try:
-        # async with lock: # Punto de control del experimento
-        for objeto in inventario:
-            if objeto["id"] == producto_id:
-                if objeto["cantidad"] > 0:
-                    await asyncio.sleep(0.05)  # Latencia simulada
-                    objeto["cantidad"] -= 1
-                    return {"mensaje": "Producto comprado"}
-                else:
-                    raise HTTPException(400, "No hay stock")
-        raise HTTPException(400, "Producto no existe")
-    except HTTPException:
-        raise
-    except Exception as error:
-        raise HTTPException(500, f"Error interno: {str(error)}")
-
+app = FastAPI(title="API Cafetería Gourmet")
 
 app.add_middleware(
     CORSMiddleware,
@@ -46,98 +17,171 @@ app.add_middleware(
     allow_headers=["*"]
 )
 
+ARCHIVO_PRODUCTOS = "productos.csv"
+ARCHIVO_VENTAS = "ventas.csv"
+
 class Producto(BaseModel):
-    id: Optional[int] = None
     nombre: str
     precio: float
+    cantidad: int = 10 # Cantidad inicial por defecto
 
-inventario = [
-    {"id": 1, "nombre": "Coca-Cola", "precio": 20, "cantidad": 25},
-    {"id": 2, "nombre": "Papas", "precio": 15, "cantidad": 40},
-    {"id": 3, "nombre": "Café", "precio": 18, "cantidad": 15}
-]
+#  Inicialización de persistencia
+def inicializar_csv():
+    """Verifica si existen los CSV. Si no, los crea con datos por defecto."""
+    if not os.path.exists(ARCHIVO_PRODUCTOS):
+        datos_iniciales = {
+            "id": [1],
+            "nombre": ["Espresso de Origen"],
+            "precio": [45.0],
+            "cantidad": [50]
+        }
+        df = pd.DataFrame(datos_iniciales)
+        df.to_csv(ARCHIVO_PRODUCTOS, index=False)
+        print(f"Archivo {ARCHIVO_PRODUCTOS} creado con éxito.")
+        
+        if not os.path.exists(ARCHIVO_VENTAS):
+            df_ventas = pd.DataFrame(columns=["fecha", "producto_id", "nombre", "precio", "cantidad", "monto_total"])
+            df_ventas.to_csv(ARCHIVO_VENTAS, index=False)
+            
+        print(f"Archivo {ARCHIVO_VENTAS} creado con éxito.")
+        
+inicializar_csv()
 
-base_datos_productos: List[dict] = [
-    {"id": 1, "nombre": "Manzana", "precio": 15.5},
-    {"id": 2, "nombre": "Leche", "precio": 24.0},
-]
-# Base de datos asíncrona simulada (simula lectura/escritura en DB o disco) 
-async def simular_operacion_db():
-    await asyncio.sleep(0.05)  # Simulamos una E/S asíncrona (I/O)
-    
+
+###    Endpoints de la API
+
+# Página principal de bienvenida (Portada)
 @app.get("/")
-def home():
-    return {"Message": "Hola bienvenido"}
+def pagina_principal():
+    return FileResponse("index.html")
 
+@app.get("/app.js")
+def archivo_javascript_dashboard():
+    return FileResponse("app.js")
+
+@app.get("/kiosco.js")
+def archivo_javascript_cliente():
+    return FileResponse("kiosco.js")
+
+# Página del Dashboard
+@app.get("/dashboard")
+def pagina_dashboard():
+    return FileResponse("dashboard.html")
+@app.get("/dashboard")
+def pagina_dashboard_admin():
+    return FileResponse("dashboard.html")
+# Endpoints CRUD interactuando con CSV
 @app.get("/productos")
-def getProductos():
-    return inventario
+def obtener_productos():
+    df = pd.read_csv(ARCHIVO_PRODUCTOS)
+    return df.to_dict(orient="records")
 
-@app.post("/productos")
-def addProducto(producto: dict):
-
-    nuevo_id = len(inventario) + 1
-    nuevo_producto = {
-        "id": nuevo_id,    
-        "nombre": producto["nombre"],
-        "precio": producto["precio"],
-        "cantidad": producto["cantidad"]
-    }
-
-    inventario.append(nuevo_producto)
-
-    return inventario
-
-@app.delete("/productos/{producto_id}")
-def deleteProducto(producto_id: int):
-    for producto in inventario:
-        if producto["id"] == producto_id:
-            inventario.remove(producto)
-            return {"Message": "El producto fue eliminado"}
-    return {"Message": "No fue encontrado el producto"}
-
-
-
-# ---------------------------------------------------------
-# 1. Endpoint GET: Obtener todos los productos (async/await)
-# ---------------------------------------------------------
-@app.get("/productos", response_model=List[dict])
-async def obtener_productos():
-    # USAMOS AWAIT: Simulamos la consulta asíncrona a la base de datos
-    await simular_operacion_db()
-    return base_datos_productos
-
-
-# ---------------------------------------------------------
-# 2. Endpoint POST: Crear producto (async SIN await interno)
-# ---------------------------------------------------------
 @app.post("/productos", status_code=status.HTTP_201_CREATED)
-async def crear_producto(producto: Producto):
-    # NO USAMOS AWAIT AQUÍ: La generación del ID y la inserción en memoria
-    # son operaciones en CPU ultra-rápidas y puramente sincrónicas.
-    nuevo_id = len(base_datos_productos) + 1 if base_datos_productos else 1
-    nuevo_producto = {"id": nuevo_id, "nombre": producto.nombre, "precio": producto.precio}
-    base_datos_productos.append(nuevo_producto)
-    return nuevo_producto
+def crear_producto(producto: Producto):
+    df = pd.read_csv(ARCHIVO_PRODUCTOS)
+    
+    nuevo_id = int(df["id"].max() + 1) if not df.empty else 1
+    nuevo_registro = {
+        "id": nuevo_id,
+        "nombre": producto.nombre,
+        "precio": producto.precio,
+        "cantidad": producto.cantidad
+    }
+    
+    # Agregamos la fila y sobreescribimos el archivo
+    df.loc[len(df)] = nuevo_registro
+    df.to_csv(ARCHIVO_PRODUCTOS, index=False)
+    
+    return nuevo_registro
 
-
-# ---------------------------------------------------------
-# 3. Endpoint DELETE: Eliminar producto por ID (async con await opcional)
-# ---------------------------------------------------------
 @app.delete("/productos/{producto_id}")
-async def eliminar_producto(producto_id: int):
-    # Búsqueda en memoria (operación sincrónica)
-    global base_datos_productos
-    producto_existente = next((p for p in base_datos_productos if p["id"] == producto_id), None)
+def eliminar_producto(producto_id: int):
+    df = pd.read_csv(ARCHIVO_PRODUCTOS)
     
-    if not producto_existente:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, 
-            detail="Producto no encontrado"
-        )
+    if producto_id not in df["id"].values:
+        raise HTTPException(status_code=404, detail="Producto no encontrado")
     
-    # USAMOS AWAIT: Simulamos el borrado persistente en la base de datos
-    await simular_operacion_db()
+    # Filtramos conservando solo los que no coinciden con el ID
+    df = df[df["id"] != producto_id]
+    df.to_csv(ARCHIVO_PRODUCTOS, index=False)
     
-    base_datos_productos = [p for p in base_datos_productos if p["id"] != producto_id]
-    return {"mensaje": f"Producto con ID {producto_id} eliminado exitosamente"}
+    return {"mensaje": f"Producto {producto_id} eliminado exitosamente"}
+
+@app.post("/productos/{producto_id}")
+def comprar_producto(producto_id: int):
+    df = pd.read_csv(ARCHIVO_PRODUCTOS)
+    
+    if producto_id not in df["id"].values:
+        raise HTTPException(status_code=404, detail="Producto no existe")
+    
+    # Obtenemos el índice numérico de la fila donde está el producto
+    indice = df.index[df["id"] == producto_id].tolist()[0]
+    
+    if df.at[indice, "cantidad"] > 0:
+        # Descuenta 1 unidad y guarda el archivo de productos
+        df.at[indice, "cantidad"] -= 1
+        df.to_csv(ARCHIVO_PRODUCTOS, index=False)
+        
+        # Extraemos los datos para el ticket
+        producto_nombre = df.at[indice, "nombre"]
+        producto_precio = float(df.at[indice, "precio"])
+        
+        # Registramos la transacción en ventas.csv
+        df_ventas = pd.read_csv(ARCHIVO_VENTAS)
+        nueva_venta = {
+            "fecha": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "producto_id": producto_id,
+            "nombre": producto_nombre,
+            "precio": producto_precio,
+            "cantidad": 1,
+            "monto_total": producto_precio
+        }
+        df_ventas.loc[len(df_ventas)] = nueva_venta
+        df_ventas.to_csv(ARCHIVO_VENTAS, index=False)
+        
+        return {"mensaje": "Compra registrada con éxito"}
+    else:
+        raise HTTPException(status_code=400, detail="Stock agotado")
+    
+    
+# Analitica de ventas 
+
+@app.get("/analiticas/kpis")
+def obtener_kpis():
+    df_ventas = pd.read_csv(ARCHIVO_VENTAS)
+    if df_ventas.empty:
+        return {"favorito": "Sin ventas", "ingresos": 0.0, "ordenes": 0}
+
+    ingresos_totales = float(df_ventas["monto_total"].sum())
+    ordenes_totales = int(len(df_ventas))
+    
+    ventas_por_producto = df_ventas.groupby("nombre")["cantidad"].sum()
+    favorito = ventas_por_producto.idxmax() if not ventas_por_producto.empty else "Sin ventas"
+
+    return {"favorito": favorito, "ingresos": ingresos_totales, "ordenes": ordenes_totales}
+
+@app.get("/analiticas/graficas")
+def obtener_datos_graficas():
+    if not os.path.exists(ARCHIVO_VENTAS):
+        return {"barras": {"labels": [], "data": []}, "pastel": {"labels": [], "data": []}}
+
+    df_ventas = pd.read_csv(ARCHIVO_VENTAS)
+    if df_ventas.empty:
+        return {"barras": {"labels": [], "data": []}, "pastel": {"labels": [], "data": []}}
+
+    # Agrupación para gráfica de barras: Ingresos por especialidad
+    ingresos_prod = df_ventas.groupby("nombre")["monto_total"].sum().reset_index()
+    
+    # Agrupación para gráfica de pastel: Cantidad de ventas por producto
+    cantidad_prod = df_ventas.groupby("nombre")["cantidad"].sum().reset_index()
+
+    return {
+        "barras": {
+            "labels": ingresos_prod["nombre"].tolist(),
+            "data": ingresos_prod["monto_total"].tolist()
+        },
+        "pastel": {
+            "labels": cantidad_prod["nombre"].tolist(),
+            "data": cantidad_prod["cantidad"].tolist()
+        }
+    }

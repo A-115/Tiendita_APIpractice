@@ -1,0 +1,151 @@
+id,nombre,precio,cantidad
+1,Latte de Coco (Origen),65.0,20
+2,Mocha Helado (Origen),70.0,20
+3,Pay de Manzana (Origen),55.0,15
+4,Croissant de Tomate y Huevo (Origen),65.0,15
+5,Sándwich de Atún (Origen),75.0,12
+6,Glamour Ámbar (Origen),80.0,20
+7,Mousse de Lava de Matcha (Origen),85.0,10
+8,Latte Nevado (Origen),75.0,15
+9,Sándwich de Res Corte Grueso (Origen),95.0,10
+10,Croissant de Frijol Rojo y Mantequilla,60.0,15
+11,Pastel de Fresas en Caja (Origen),70.0,10
+12,Café Caliente a la Naranja (Origen),65.0,15
+13,Sándwich de Cerdo Empanizado (Origen),90.0,10
+14,Macchiato de Coco (Origen),70.0,18
+15,Latte de Matcha con Espuma (Origen),80.0,15
+16,Tiramisú Clásico (Origen),85.0,12
+17,Croissant de Jamón y Queso (Origen),55.0,20
+18,Milhojas de Caramelo y Cacao (Origen),75.0,10
+19,Frappé de Mazapán De la Rosa,85.0,25
+20,Café de Olla Estilo Tapalpa,45.0,30
+21,Chocolate Caliente Rey Amargo,55.0,25
+22,Jericalla Tradicional de las 9 Esquinas,40.0,30
+23,Lonche de Pierna Bañado,95.0,15
+24,Lonche de Panela con Frijol,65.0,20
+25,Birote Salado con Mantequilla y Frijoles,45.0,25
+26,Mini Torta Ahogada de Carnitas,75.0,15
+27,Empanada de Leche Estilo Santuario,35.0,20
+28,Tejuino Refrescante con Nieve de Limón,50.0,20
+29,Chilaquiles Rojos con Panela,85.0,15
+30,Chilaquiles Verdes con Pollo,95.0,15
+31,Molletes Sencillos con Pico de Gallo,55.0,20
+32,Molletes con Chorizo,75.0,15
+33,Panela Asada al Orégano,65.0,10
+34,Atole de Nuez,40.0,20
+35,Atole de Guayaba,40.0,20
+36,Concha de Vainilla,25.0,30
+37,Concha de Chocolate,25.0,30
+38,Picón Envinado,35.0,15
+39,Oreja Crujiente,20.0,25
+40,Frappé de Horchata,75.0,20
+41,Espresso Sencillo,35.0,40
+42,Espresso Doble,45.0,40
+43,Americano Caliente,40.0,40
+44,Americano Helado,45.0,35
+45,Macchiato,45.0,30
+46,Cortado,45.0,30
+47,Flat White,55.0,30
+48,Cappuccino Clásico,60.0,35
+49,Latte Clásico,60.0,35
+50,Latte Vainilla,70.0,30
+51,Latte Caramelo,70.0,30
+52,Latte Avellana,70.0,30
+53,Mocha Blanco,75.0,25
+54,Mocha Oscuro,75.0,25
+55,Café Moka con Crema Batida,80.0,20
+56,Cold Brew Original,60.0,25
+57,Cold Brew con Leche de Avena,75.0,20
+58,Nitro Cold Brew,85.0,15
+59,Affogato,70.0,20
+60,Café Vienés,65.0,20
+61,Frappé de Vainilla,75.0,20
+62,Frappé de Caramelo,75.0,20
+63,Frappé de Moka,80.0,20
+64,Frappé de Taro,85.0,15
+65,Frappé de Matcha,85.0,15
+66,Frappé de Cajeta,80.0,20
+67,Frappé de Oreo,85.0,15
+68,Frappé de Rompope,80.0,15
+69,Smoothie de Fresa,65.0,20
+70,Smoothie de Mango,65.0,20
+71,Smoothie de Frutos Rojos,70.0,20
+72,Té Chai Latte Caliente,65.0,25
+73,Té Chai Latte Helado,70.0,20
+74,Dirty Chai (con Espresso),80.0,20
+75,Tisana Fresa Kiwi,60.0,25
+76,Tisana Moras Silvestres,60.0,25
+77,Tisana Durazno,60.0,25
+78,Té Verde Sencha,50.0,30
+79,Té Negro Earl Grey,50.0,30
+80,Té de Manzanilla y Miel,45.0,30
+81,Infusión de Jamaica y Cítricos,45.0,25
+82,Soda Italiana de Manzana Verde,55.0,20
+83,Soda Italiana de Frambuesa,55.0,20
+84,Soda Italiana de Maracuyá,55.0,20
+85,Limonada Mineral,40.0,30
+86,Naranjada Mineral,40.0,30
+87,Jugo Verde Antioxidante,55.0,20
+88,Jugo de Naranja Natural,45.0,25
+89,Agua Mineral Preparada,35.0,30
+90,Panini de Pavo y Queso Gouda,95.0,15
+91,Panini Caprese (Tomate y Mozzarella),90.0,15
+92,Panini de Pollo al Pesto,105.0,12
+93,Panini de Roast Beef,115.0,10
+94,Panini Tres Quesos,90.0,15
+95,Bagel con Salmón Ahumado (Lox),125.0,10
+96,Bagel de Huevo Tocino y Queso,85.0,15
+97,Bagel con Queso Crema,55.0,20
+98,Cuernito Relleno de Pollo,75.0,15
+99,Sándwich Club,110.0,12
+100,Ensalada César con Pollo,105.0,12
+101,Ensalada de Frutos Rojos y Nuez,95.0,15
+102,Tostada de Aguacate Clásica,75.0,20
+103,Tostada de Aguacate con Huevo Poché,90.0,15
+104,Crepa Salada de Champiñones,85.0,15
+105,Crepa Salada de Espinaca y Queso,85.0,15
+106,Crepa Salada de Jamón Serrano,115.0,10
+107,Crepa Dulce de Nutella y Fresa,80.0,15
+108,Crepa Dulce de Cajeta y Nuez,75.0,15
+109,Waffles con Fruta Fresca,85.0,15
+110,Waffles con Pollo Frito,115.0,10
+111,Pancakes Tradicionales con Miel,75.0,15
+112,Avena Preparada con Manzana y Canela,60.0,20
+113,Tazón de Yogur con Granola y Miel,65.0,20
+114,Tazón de Acai (Acai Bowl),110.0,10
+115,Cheesecake Clásico New York,75.0,12
+116,Cheesecake de Frambuesa,80.0,12
+117,Cheesecake de Maracuyá,80.0,12
+118,Rebanada de Pastel Red Velvet,85.0,10
+119,Rebanada de Pastel de Zanahoria,85.0,10
+120,Rebanada de Pastel de Chocolate Turco,90.0,10
+121,Rebanada de Pastel Tres Leches,75.0,12
+122,Brownie de Chocolate con Nuez,45.0,20
+123,Brownie con Bola de Helado,70.0,15
+124,Galleta de Chispas de Chocolate,30.0,25
+125,Galleta de Avena y Pasas,30.0,25
+126,Galleta de Macadamia,35.0,20
+127,Alfajor de Maicena y Dulce de Leche,35.0,20
+128,Macaron de Vainilla,40.0,20
+129,Macaron de Pistache,40.0,20
+130,Macaron de Frambuesa,40.0,20
+131,Tartaleta de Frutas,65.0,15
+132,Tartaleta de Limón y Merengue,65.0,15
+133,Strudel de Manzana Caliente,70.0,15
+134,Éclair de Chocolate,55.0,15
+135,Éclair de Café,55.0,15
+136,Panque de Elote Casero,45.0,20
+137,Panque de Naranja,40.0,20
+138,Panque de Plátano y Nuez,45.0,20
+139,Muffin de Arándanos,40.0,20
+140,Muffin de Chocolate Doble,40.0,20
+141,Churros Clásicos con Azúcar (Orden),55.0,20
+142,Churros Rellenos de Cajeta (Orden),65.0,15
+143,Copa de Helado Artesanal (2 bolas),70.0,15
+144,Bionico Tapatío con Crema Dulce,65.0,15
+145,Gelatina de Mosaico,35.0,20
+146,Carlota de Limón,50.0,15
+147,Volcán de Chocolate (Fondant),85.0,10
+148,Galleta Vegana de Matcha,45.0,15
+149,Rebanada de Pastel Keto de Almendra,95.0,10
+150,Vaso de Fruta Fresca de Temporada,40.0,25

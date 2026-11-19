@@ -1,75 +1,91 @@
-<html>
-    <head>
-        <title>Tiendita</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    </head>
-    <body class="bg-light mt-5">
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>L'Espresso - Ordena en línea</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --fondo: #F5EFE6;
+            --texto: #2C1E16;
+            --acento: #C5A059;
+        }
+        body { background-color: var(--fondo); color: var(--texto); font-family: 'Montserrat', sans-serif; }
+        h1, h2, h3 { font-family: 'Playfair Display', serif; }
+        
+        .producto-card {
+            background: white; border-radius: 12px; padding: 15px; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05); transition: transform 0.2s;
+            display: flex; flex-direction: column; justify-content: space-between;
+            height: 100%;
+        }
+        .producto-card:hover { transform: translateY(-3px); }
+        .precio { color: var(--acento); font-weight: bold; font-size: 1.2rem; }
+        
+        .carrito-panel {
+            background: white; border-radius: 12px; padding: 20px;
+            position: sticky; top: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .btn-gourmet {
+            background-color: var(--acento); color: white; border: none; font-weight: 500; width: 100%;
+        }
+        .btn-gourmet:hover { background-color: #b38e4a; color: white; }
+        
+        /* Enlace discreto al dashboard */
+        .admin-link {
+            position: fixed; bottom: 15px; right: 15px; color: #a89d91; 
+            font-size: 0.8rem; text-decoration: none; opacity: 0.5; transition: opacity 0.3s;
+        }
+        .admin-link:hover { opacity: 1; color: var(--acento); }
+    </style>
+</head>
+<body class="py-4">
 
-        <div class="container">
-            <div class="row g-4">
+    <div class="container">
+        <header class="text-center mb-5">
+            <h1 class="display-4"><i class="bi bi-cup-hot-fill text-muted me-2"></i>L'Espresso</h1>
+            <p class="text-muted">Menú de Especialidad</p>
+        </header>
+
+        <div class="row">
+            <!-- Sección del Catálogo (Izquierda) -->
+            <div class="col-md-8">
+                <h3 class="mb-4">Nuestro Menú</h3>
+                <!-- Buscador rápido -->
+                <input type="text" id="buscador" class="form-control mb-4" placeholder="Buscar un platillo o bebida...">
                 
-                <!-- Formulario de Registro -->
-                <div class="col-md-4">
-                    <div class="card shadow-sm border-0">
-                        <div class="card-header bg-white font-weight-bold fw-bold">
-                            <i class="me-1 text-primary"></i> Registrar Producto
-                        </div>
-                        <div class="card-body">
-                            <form id="formProducto">
-                                <div class="mb-3">
-                                   
-                                    <label for="nombre" class="form-label">Nombre del Producto</label>
-                                    <input type="text" class="form-control" id="nombre" placeholder="Ej. Leche 1L" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="precio" class="form-label">Precio ($)</label>
-                                    <input type="number" step="0.5" class="form-control" id="precio" placeholder="25.00" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="cantidad" class="form-label">Cantidad Disponible</label>
-                                    <input type="number" class="form-control" id="cantidad" placeholder="10" required>
-                                </div>
-                                <button type="submit" class="btn btn-primary w-100">
-                                    <i class="bi bi-save me-1"></i> Guardar Producto
-                                </button>
-                            </form>
-                        </div>
-                    </div>
+                <div class="row g-3" id="catalogo-contenedor">
+                    <!-- Las tarjetas se generan por JS -->
+                    <div class="col-12 text-center text-muted">Cargando menú...</div>
                 </div>
+            </div>
 
-                <!-- Tabla de Inventario -->
-                <div class="col-md-8">
-                    <div class="card shadow-sm border-0">
-                        <div class="card-header bg-white fw-bold d-flex justify-content-between align-items-center">
-                            <span><i class="me-1 text-primary"></i> Catálogo de Productos</span>
-                            <span class="badge bg-secondary" id="totalProductos">0 productos</span>
-                        </div>
-                        <div class="card-body p-0">
-                            <div class="table-responsive">
-                                <table class="table table-hover align-middle mb-0">
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>Producto</th>
-                                            <th>Precio</th>
-                                            <th>Cantidad</th>
-                                            <th class="text-end me-3">Acciones</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="tablaProductos">
-                                        <!-- Las filas se cargan dinámicamente con JavaScript -->
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
+            <!-- Sección del Carrito (Derecha) -->
+            <div class="col-md-4 mt-4 mt-md-0">
+                <div class="carrito-panel">
+                    <h4 class="mb-4"><i class="bi bi-bag"></i> Tu Orden</h4>
+                    <ul class="list-group list-group-flush mb-3" id="lista-carrito">
+                        <li class="list-group-item text-muted small text-center">El carrito está vacío</li>
+                    </ul>
+                    <div class="d-flex justify-content-between fw-bold fs-5 mb-4">
+                        <span>Total:</span>
+                        <span id="total-carrito">$0.00</span>
                     </div>
+                    <button class="btn btn-gourmet py-2" id="btn-pagar" onclick="procesarPago()">
+                        <i class="bi bi-credit-card me-2"></i> Pagar Orden
+                    </button>
                 </div>
-
             </div>
         </div>
+    </div>
 
-        <!-- Bootstrap JS Bundle -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="app.js"></script>
-    </body>
+    <!-- Enlace discreto para el administrador -->
+    <a href="/dashboard" class="admin-link"><i class="bi bi-gear-fill me-1"></i>Acceso Admin</a>
+
+    <!-- Lógica Exclusiva del Cliente -->
+    <script src="kiosco.js"></script>
+</body>
 </html>
