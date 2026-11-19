@@ -119,4 +119,26 @@ async function procesarPago() {
         for (const item of carrito) {
             await fetch(`${API_URL}/productos/${item.id}`, { 
                 method: "POST",
-                headers: { "Content-Type": "application/json"
+                headers: { "Content-Type": "application/json" }
+            });
+        }
+        
+        alert("¡Compra procesada con éxito! Tu orden se está preparando.");
+        carrito = []; 
+        actualizarCarrito();
+        
+        // Recargar el menú para reflejar el nuevo stock (cantidades actualizadas)
+        await cargarMenu(); 
+    } catch (error) {
+        console.error("Error al procesar el pago", error);
+        alert("Hubo un problema de conexión al procesar la orden.");
+    } finally {
+        if (btn) {
+            btn.innerHTML = `<i class="bi bi-credit-card me-2"></i> Pagar Orden`;
+            btn.disabled = false;
+        }
+    }
+}
+
+// Inicializar la vista cargando el catálogo
+document.addEventListener("DOMContentLoaded", cargarMenu);

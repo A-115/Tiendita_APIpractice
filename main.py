@@ -66,10 +66,10 @@ def archivo_javascript_cliente():
 # Página del Dashboard
 @app.get("/dashboard")
 def pagina_dashboard():
-    return FileResponse("dashboard.html")
+    return FileResponse("dashboard-cafe.html")
 @app.get("/dashboard")
 def pagina_dashboard_admin():
-    return FileResponse("dashboard.html")
+    return FileResponse("dashboard-cafe.html")
 # Endpoints CRUD interactuando con CSV
 @app.get("/productos")
 def obtener_productos():
